@@ -1,0 +1,26 @@
+#root {
+	margin: 0;
+	background-color: aquamarine;
+}
+.app-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+#welcome {
+	display: flex;
+	justify-content: center;
+}
+main {
+	justify-content: center;
+}
+button {
+	width: 100px;
+	height: 50px;
+	border-radius: 25px;
+}
+
+@font-face {
+	font-family: 'alagard';
+	src: url(./fonts/alagard.ttf);
+}

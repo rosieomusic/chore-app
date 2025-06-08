@@ -1,0 +1,10 @@
+#root {
+	margin: 0;
+}
+.app-container {
+	display: flex;
+}
+@font-face {
+	font-family: 'alagard';
+	src: url(./fonts/alagard.ttf);
+}

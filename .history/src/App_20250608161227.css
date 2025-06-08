@@ -1,0 +1,17 @@
+#root {
+	margin: 0;
+}
+.welcome {
+	background-color: aqua;
+	display: flex;
+	flex-direction: column;
+}
+#app-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+@font-face {
+	font-family: 'alagard';
+	src: url(./fonts/alagard.ttf);
+}

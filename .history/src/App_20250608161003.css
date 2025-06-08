@@ -1,0 +1,16 @@
+#root {
+	margin: 0;
+}
+#welcome {
+	display: flex;
+	justify-content: center;
+}
+#app-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+@font-face {
+	font-family: 'alagard';
+	src: url(./fonts/alagard.ttf);
+}
