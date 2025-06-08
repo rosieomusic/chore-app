@@ -7,41 +7,17 @@ export default function ChoreListComponent() {
 
 	useEffect(() => {
 		const fetchChores = async () => {
-			const { data: choresData, error: choresError } = await supabase
+			const { data, error } = await supabase
 				.from('chores')
 				.select('*')
 				.order('exp_date', { ascending: true });
 
-			const { data: assignments, error: assignmentError } = await supabase
-				.from('user_chores')
-				.select('chore_id, user_id, profiles:profiles (user_id, name, avatar)');
-
-			const { data: profilesData, error: profilesError } = await supabase
-				.from('profiles')
-				.select('user_id, name, avatar');
-
-			if (choresError || assignmentError || profilesError) {
-				console.error(
-					'Error fetching data:',
-					choresError || assignmentError || profilesError
-				);
-				return;
+			if (error) {
+				console.error('Error fetching chores:', error.message);
+			} else {
+				setChores(data);
 			}
 
-			const choresWithAssignee = choresData.map((chore) => {
-				const assignment = assignments.find(
-					(a) => a.chore_id === chore.chore_id
-				);
-				console.log('Chore:', chore.name, '| Assignment:', assignment);
-				const profile = profilesData.find(
-					(p) => String(p.user_id) === String(assignment?.user_id)
-				);
-				console.log('→ Matched Profile:', profile);
-				return { ...chore, assignedUser: profile || null };
-			});
-
-			console.log('Chores with assignments:', choresWithAssignee);
-			setChores(choresWithAssignee);
 			setLoading(false);
 		};
 
@@ -69,7 +45,7 @@ export default function ChoreListComponent() {
 						<th style={th}>Category</th>
 						<th style={th}>Due In</th>
 						<th style={th}>Completed</th>
-						<th style={th}>Assigned To</th>
+						<th>style={th}Assigned To</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -79,17 +55,6 @@ export default function ChoreListComponent() {
 							<td style={td}>{chore.category || '—'}</td>
 							<td style={td}>{calculateDaysLeft(chore.exp_date)}</td>
 							<td style={td}>{chore.completed ? '✅' : '❌'}</td>
-							<td style={td}>
-								{chore.assignedUser ? (
-									<img
-										src={chore.assignedUser.avatar}
-										alt={chore.assignedUser.name}
-										style={{ width: '40px' }}
-									/>
-								) : (
-									<span>Unassigned</span>
-								)}
-							</td>
 						</tr>
 					))}
 				</tbody>

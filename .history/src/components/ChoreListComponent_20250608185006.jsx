@@ -12,37 +12,48 @@ export default function ChoreListComponent() {
 				.select('*')
 				.order('exp_date', { ascending: true });
 
-			const { data: assignments, error: assignmentError } = await supabase
+			const { data: userChoresData, error: userChoresError } = await supabase
 				.from('user_chores')
-				.select('chore_id, user_id, profiles:profiles (user_id, name, avatar)');
+				.select('*');
 
-			const { data: profilesData, error: profilesError } = await supabase
-				.from('profiles')
-				.select('user_id, name, avatar');
-
-			if (choresError || assignmentError || profilesError) {
-				console.error(
-					'Error fetching data:',
-					choresError || assignmentError || profilesError
-				);
+			if (choresError || userChoresError) {
+				console.error('Error fetching chores or assignments');
 				return;
 			}
 
+			// Combine assignee info
 			const choresWithAssignee = choresData.map((chore) => {
-				const assignment = assignments.find(
-					(a) => a.chore_id === chore.chore_id
+				const assignment = userChoresData.find(
+					(uc) => uc.chore_id === chore.chore_id
 				);
-				console.log('Chore:', chore.name, '| Assignment:', assignment);
-				const profile = profilesData.find(
-					(p) => String(p.user_id) === String(assignment?.user_id)
-				);
-				console.log('→ Matched Profile:', profile);
-				return { ...chore, assignedUser: profile || null };
+				return { ...chore, assignedTo: assignment?.user_id || null };
 			});
 
-			console.log('Chores with assignments:', choresWithAssignee);
 			setChores(choresWithAssignee);
 			setLoading(false);
+		};
+		const otherUserId = 'ROOMMATE_USER_ID'; // replace with real one
+
+		const toggleAssignment = async (chore) => {
+			const isAssignedToYou = chore.assignedTo === user.id;
+			const newUserId = isAssignedToYou ? otherUserId : user.id;
+
+			// Delete existing assignment
+			await supabase
+				.from('user_chores')
+				.delete()
+				.eq('chore_id', chore.chore_id);
+
+			// Insert new assignment
+			await supabase.from('user_chores').insert([
+				{
+					chore_id: chore.chore_id,
+					user_id: newUserId,
+				},
+			]);
+
+			// Refetch chores
+			fetchChores();
 		};
 
 		fetchChores();
@@ -80,15 +91,11 @@ export default function ChoreListComponent() {
 							<td style={td}>{calculateDaysLeft(chore.exp_date)}</td>
 							<td style={td}>{chore.completed ? '✅' : '❌'}</td>
 							<td style={td}>
-								{chore.assignedUser ? (
-									<img
-										src={chore.assignedUser.avatar}
-										alt={chore.assignedUser.name}
-										style={{ width: '40px' }}
-									/>
-								) : (
-									<span>Unassigned</span>
-								)}
+								<img
+									src={assignedUser?.avatar}
+									alt='avatar'
+									style={{ width: '40px' }}
+								/>
 							</td>
 						</tr>
 					))}

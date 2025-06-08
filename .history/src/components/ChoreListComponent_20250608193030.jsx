@@ -14,7 +14,7 @@ export default function ChoreListComponent() {
 
 			const { data: assignments, error: assignmentError } = await supabase
 				.from('user_chores')
-				.select('chore_id, user_id, profiles:profiles (user_id, name, avatar)');
+				.select('chore_id, user_id');
 
 			const { data: profilesData, error: profilesError } = await supabase
 				.from('profiles')
@@ -81,11 +81,7 @@ export default function ChoreListComponent() {
 							<td style={td}>{chore.completed ? '✅' : '❌'}</td>
 							<td style={td}>
 								{chore.assignedUser ? (
-									<img
-										src={chore.assignedUser.avatar}
-										alt={chore.assignedUser.name}
-										style={{ width: '40px' }}
-									/>
+									chore.assignedUser.name
 								) : (
 									<span>Unassigned</span>
 								)}

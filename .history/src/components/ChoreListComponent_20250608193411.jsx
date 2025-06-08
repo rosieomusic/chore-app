@@ -81,11 +81,7 @@ export default function ChoreListComponent() {
 							<td style={td}>{chore.completed ? '✅' : '❌'}</td>
 							<td style={td}>
 								{chore.assignedUser ? (
-									<img
-										src={chore.assignedUser.avatar}
-										alt={chore.assignedUser.name}
-										style={{ width: '40px' }}
-									/>
+									chore.assignedUser.name
 								) : (
 									<span>Unassigned</span>
 								)}

@@ -83,8 +83,7 @@ export default function ChoreListComponent() {
 								{chore.assignedUser ? (
 									<img
 										src={chore.assignedUser.avatar}
-										alt={chore.assignedUser.name}
-										style={{ width: '40px' }}
+										alt=''
 									/>
 								) : (
 									<span>Unassigned</span>
