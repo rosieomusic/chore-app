@@ -102,11 +102,10 @@ export default function ChoreListComponent() {
 											alt={user.name}
 											style={{
 												width: '40px',
-												height: '40',
-												borderRadius: '20px',
+												borderRadius: '10px',
 												border:
 													chore.assignedUser?.user_id === user.user_id
-														? '3px solid #b9fbc0'
+														? '3px solid black'
 														: '2px solid transparent',
 												cursor: 'pointer',
 											}}
@@ -150,5 +149,5 @@ const th = {
 
 const td = {
 	borderBottom: '1px solid #eee',
-	padding: '18px',
+	padding: '8px',
 };

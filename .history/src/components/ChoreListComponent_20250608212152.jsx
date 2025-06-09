@@ -54,7 +54,7 @@ export default function ChoreListComponent() {
 		const fetchUsers = async () => {
 			const { data, error } = await supabase
 				.from('profiles')
-				.select('user_id, name, avatar');
+				.select('id, name, avatar');
 
 			if (!error) setUsers(data);
 		};
@@ -94,45 +94,15 @@ export default function ChoreListComponent() {
 							<td style={td}>{calculateDaysLeft(chore.exp_date)}</td>
 							<td style={td}>{chore.completed ? '✅' : '❌'}</td>
 							<td style={td}>
-								<div>
-									{users.map((user) => (
-										<img
-											key={user.id}
-											src={user.avatar}
-											alt={user.name}
-											style={{
-												width: '40px',
-												height: '40',
-												borderRadius: '20px',
-												border:
-													chore.assignedUser?.user_id === user.user_id
-														? '3px solid #b9fbc0'
-														: '2px solid transparent',
-												cursor: 'pointer',
-											}}
-											onClick={async () => {
-												const { error } = await supabase
-													.from('user_chores')
-													.upsert({
-														chore_id: chore.chore_id,
-														user_id: user.user_id,
-													});
-
-												if (error) {
-													console.error('Failed to assign user', error);
-												} else {
-													// Update UI locally without refetch
-													const updatedChores = chores.map((c) =>
-														c.chore_id === chore.chore_id
-															? { ...c, assignedUser: user }
-															: c
-													);
-													setChores(updatedChores);
-												}
-											}}
-										/>
-									))}
-								</div>
+								{chore.assignedUser ? (
+									<img
+										src={chore.assignedUser.avatar}
+										alt={chore.assignedUser.name}
+										style={{ width: '40px' }}
+									/>
+								) : (
+									<span>Unassigned</span>
+								)}
 							</td>
 						</tr>
 					))}
@@ -150,5 +120,5 @@ const th = {
 
 const td = {
 	borderBottom: '1px solid #eee',
-	padding: '18px',
+	padding: '8px',
 };

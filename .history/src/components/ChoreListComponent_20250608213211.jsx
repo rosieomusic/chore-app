@@ -102,11 +102,9 @@ export default function ChoreListComponent() {
 											alt={user.name}
 											style={{
 												width: '40px',
-												height: '40',
-												borderRadius: '20px',
 												border:
-													chore.assignedUser?.user_id === user.user_id
-														? '3px solid #b9fbc0'
+													chore.assignedUser?.user_id === user.id
+														? '3px solid black'
 														: '2px solid transparent',
 												cursor: 'pointer',
 											}}
@@ -115,19 +113,11 @@ export default function ChoreListComponent() {
 													.from('user_chores')
 													.upsert({
 														chore_id: chore.chore_id,
-														user_id: user.user_id,
+														user_id: user_id,
 													});
 
 												if (error) {
 													console.error('Failed to assign user', error);
-												} else {
-													// Update UI locally without refetch
-													const updatedChores = chores.map((c) =>
-														c.chore_id === chore.chore_id
-															? { ...c, assignedUser: user }
-															: c
-													);
-													setChores(updatedChores);
 												}
 											}}
 										/>
@@ -150,5 +140,5 @@ const th = {
 
 const td = {
 	borderBottom: '1px solid #eee',
-	padding: '18px',
+	padding: '8px',
 };

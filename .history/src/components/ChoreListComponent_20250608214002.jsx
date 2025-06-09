@@ -150,5 +150,5 @@ const th = {
 
 const td = {
 	borderBottom: '1px solid #eee',
-	padding: '18px',
+	padding: '8px',
 };

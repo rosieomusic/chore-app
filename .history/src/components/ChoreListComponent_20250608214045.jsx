@@ -144,7 +144,7 @@ export default function ChoreListComponent() {
 
 const th = {
 	borderBottom: '2px solid #ccc',
-	textAlign: 'left',
+	textAlign: 'center',
 	padding: '8px',
 };
 
